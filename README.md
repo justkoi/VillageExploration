@@ -1,29 +1,119 @@
 # 마을탐험
 
-### 한국게임과학고등학교 1학년 겨울방학 팀프로젝트
+프로젝트 소개 : 마을탐험은 여러 마을을 오가면서 다양한 사건을 조사해 나가는 퀘스트 수행 형식의 어드벤처 게임입니다.
 
-프로젝트 소개 : Limit는 정해진 자원안에서 용병을 고용하여 적을 물리치는 전략게임입니다.
+사용 기술 : Flash Action Script 2.0, Macromedia Flash MX 2004
 
-사용 기술 : C++, WindowsAPI
+담당 역할 : 게임 개발 전체
 
-담당 역할 : 팀장, 프로그래밍 전체
+개발기간 : 2007년 8월 ~  2007년 9월
 
-개발기간 : 2011년 12월~ 2012년 2월
+핵심 기술 / 알고리즘 : 플레이어 이동, 프레임 이동, 퀘스트 수행
 
-핵심 기술 / 알고리즘 : 게임 속 유닛의 구현. 아군 및 적군 유닛의 자동전투 시뮬레이션. 전투 이동을 위해 유닛을 겹치지 않으면서 유닛이 다음 위치를 찾아갈 수 있도록 하는 알고리즘 구현. 원거리 투사체 공격 및 아군 힐링 알고리즘 구현.
+핵심코드 : 
 
-핵심 코드 설명 : 
+```Action Script 2.0
+플레이어 무비클립 액션
+onClipEvent (load) {
+	var spd = 8;
+}
+onClipEvent (enterFrame) {
+	if (Key.isDown(Key.RIGHT)) {
+		this.gotoAndPlay(3);
+		this._x += spd;
+	}
+}
+onClipEvent (enterFrame) {
+	if (Key.isDown(Key.LEFT)) {
+		this.gotoAndPlay(1);
+		this._x -= spd;
+	}
+}
+onClipEvent (enterFrame) {
+	if (Key.isDown(Key.DOWN)) {
+		this.gotoAndPlay(4);
+		this._y += spd;
+	}
+}
+onClipEvent (enterFrame) {
+	if (Key.isDown(Key.UP)) {
+		this.gotoAndPlay(2);
+		this._y -= spd;
+	}
+}
+onClipEvent (enterFrame) {
+	if (this._x>550-this._width || this._x<0+this._width) {
+		this._x = 353;
+	}
+}
+onClipEvent (enterFrame) {
+	if (this._y>303.9-this._height || this._y<0+this._height) {
+		this._y = 204.3;
+	}
+}
+의의 : 변수 선언 및 조건절의 이해. (캐릭터 이동속도 spd 및 화면밖으로 나가지 못하게 처리)
+```
 
-개발 기간 : 
+```
+포탈 액션
+onClipEvent (enterFrame) {
+	if (_root.hr.hitTest(this)) {
+		_root.text1._visible = true;
+	} else {
+		_root.text1._visible = false;
+	}
+}
+onClipEvent (keyDown) {
+	if (_root.hr.hitTest(this) && Key.isDown(Key.SPACE)) {
+		_root.hr._x = 60;
+		_root.gotoAndPlay(4);
+	}
+}
+의의 : 무비클립과 무비클립 사이의 히트박스에 따른 충돌처리 이해 (hitTest 메서드). 
+충돌하는중에(and) 스페이스가 눌린 경우 프레임(씬) 이동 처리.
+```
 
-프로젝트 추가 설명 : 프로젝트 규모에 비해 기간이 짧았고 팀의 스케쥴을 조율하는 팀장으로서 리더쉽의 부족으로  프로젝트를 마무리 하지 못했습니다. 그렇지만 핵심 게임 전투로직을 완성하기 위해 노력하였으며 게임 전투로직을 완성하는 과정속에서 여러가지 고민을 해보았고 많은 실력 향상이 있을 수 있었습니다. A*길찾기 알고리즘을 공부할 기회도 있었지만 당시 실력의 부족으로 적용하지는 못하였습니다.
+```
+메인 프레임. 세이브 & 로드.
+var money:Number = 0;
+var h2:Number = 100;
+var key:Number = 1;
+var qstn = 1;
 
-게임 소개 : 
 
-Github-Limit 게임소개.docx 파일을 참고해주세요.
+_global.saveGame = function() {
+	saveName = "123456";
+	myLSO = SharedObject.getLocal(saveName);
+	if (myLSO.data.myObj == undefined) {
+		trace("게임 저장");
+	} else {
+		trace("이전 게임 저장");
+	}
+	myObj = {};
+	myObj.objArray = new Array();
+	myObj.objArray[0] = money;
+	myObj.objArray[1] = qstn;
+	myObj.objArray[2] = h2;
+	myObj.objArray[3] = key;
+	myLSO.data.myObj = myObj;
+};
+_global.loadGame = function() {
+	var _local1 = _root;
+	loadName = "123456";
+	myLSO = SharedObject.getLocal(loadName);
+	if (myLSO.data.myObj == undefined) {
+	} else {
+		money = myLSO.data.myObj.objArray[0];
+		qstn = myLSO.data.myObj.objArray[1];
+		h2 = myLSO.data.myObj.objArray[2];
+		key = myLSO.data.myObj.objArray[2];
+	}
+};
+var h:Number = 0;
+의의 : 전역변수의 이해
+```
 
-기획서 : 고등학교 1학년때의 작업을 체계적으로 정리해놓지 못하여 당시 기획서가 존재하였지만 현재 제작 당시기획서가 소실되었습니다. 위의 설명서는 제 기억을 바탕으로 다시 제작된 것입니다.
-
-플레이 영상 : 유투브 링크 [misskgsh@gmail.com]
-프로젝트 주소 : Git Hub
+최초 업로드 홈페이지 : https://cafe.naver.com/shiftouch/187504
+플레이 영상 : https://youtu.be/YOkyj1Wgd54
+프로젝트 주소 : https://github.com/justkoi/VillageExploration
 
