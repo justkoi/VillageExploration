@@ -114,6 +114,8 @@ var h:Number = 0;
 ```
 
 최초 업로드 홈페이지 : https://cafe.naver.com/shiftouch/187504
+
 플레이 영상 : https://youtu.be/YOkyj1Wgd54
+
 프로젝트 주소 : https://github.com/justkoi/VillageExploration
 
